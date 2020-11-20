@@ -4,16 +4,16 @@ function init() {
   //VARIABLES 
   const grid = document.querySelector('.grid')
 
-  const width = 12
-  const cellCount = width * width
+  const width = 28
+  const height = 36
+  const cellCount = width * height
   const cells = []
 
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  const bananaBreadClass = 'bananaBread'
-  let pacCurrentPosition = 143 //variable to keep track of current position
-  let virusCurrentPostion = 101
+  let pacCurrentPosition = 13 //variable to keep track of current position
+  // let virusCurrentPostion = 101
   
   //MAKE A GRID
   // function, createGrid which takes one parameter, invoked the fucntion below passing in value of current position
@@ -27,32 +27,68 @@ function init() {
       cellCount.textContent = i
       grid.appendChild(cell)
       cells.push(cell)
-      cell.innerText = i
+      // cell.innerText = i
+      // console.log(cells)
     }
-
     //invoking the addPac function, whicever number is passed into its paratmeters the player will start at. We pass pacStartingPosition which is === pacCurrentPosition as we invoke it in createGrid below
     addPac(pacStartingPosition)
-    addRoll(50)
-    addVirus(25)
-    addBananaBread(120)
   }
   
   //invoking createGrid and passing in value of what currentPosition is. Current position is passed as JavaScript reloads the grid after every turn 
   createGrid(pacCurrentPosition) 
+
+  //Black = 1
+  //Edge = 2
+  //Path = 3
+  //CREATE LAYOUT
+  const layout = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2, 
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2, 
+                  2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2, 
+                  2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 4, 4, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 
+                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+                  3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 
+                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1, 
+                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 
+                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+                  2, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 2,
+                  2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
+                  2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
+                  2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2, 
+                  2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
+                  2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
+                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 
+                  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                  1, 1, 5, 5, 5, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                  1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
 
   //ADD PAC TO GRID
   //function is saying, the cells at the position mentioned in the variable above, add a class list of pacClass which has been assigned the class for the player in css
   function addPac(position) {
     cells[position].classList.add(pacClass) 
   }
-  function addRoll(position) {
-    cells[position].classList.add(rollClass)
-  }
   function addVirus(position) {
     cells[position].classList.add(virusClass)
   }
-  function addBananaBread(position) {
-    cells[position].classList.add(bananaBreadClass)
+  function addRoll(position) {
+    cells[position].classList.add(rollClass)
   }
 
   //REMOVE PAC
@@ -94,12 +130,7 @@ function init() {
   }
 
   //VIRUS RANDOMLY GENERATED MOVEMENT
-  function moveVirus() {
-    removeVirus(virusCurrentPostion)
-    const horizontalPosition = pacCurrentPosition % width
-    const verticalPosition = Math.floor(pacCurrentPosition / width)
-      if (virusCurrentPostion)
-  }
+  
 
   
 

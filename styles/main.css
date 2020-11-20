@@ -30,59 +30,27 @@ header {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
   justify-content: center;
-  height: 650px;
-  width: 650px;
-  justify-content: space-between;
-
-}
-
-.grid div {
-  flex-grow: 1;
-  height: 8%;
-  width: 8%;
-  margin: 1px;
+  width: 560px;
+  height: 720px;
   background-color: white;
   opacity: 70%;
 }
 
 .grid div {
-  border: 1px solid goldenrod;
+  flex-grow: 1;
+  max-height: 20px;
+  max-width: 20px;
 }
 
 .grid div.pac {
-  background-image: url('./pac-nan.png');
-  background-repeat: no-repeat;
+  background-color: yellow;
   background-size: contain;
-  cursor: pointer;
   opacity: 100%;
+  max-width: 20px;
+  max-height: 20px;
 }
 
-.grid div.roll {
-  background-image: url('./toilet-roll.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  opacity: 100%;
-}
-
-.grid div.virus {
-  background-image: url('./virus.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  opacity: 100%;
-}
-
-grid div.bananaBread {
-  background-image: url('banana-bread.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-  width: 100%;
+.grid div.black {
+  background-color: black;
 }
