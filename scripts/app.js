@@ -10,10 +10,12 @@ function init() {
   const cellCount = width * height
   const cells = []
  
+  const start = document.querySelector('.start')
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
   let pacCurrentPosition = 742 //variable to keep track of current position
+  let virusCurrentPositionOne = 0
   const virusStartingPositionOne = 462
   const virusStartingPositionTwo = 491
   const virusStartingPositionThree = 459
@@ -22,6 +24,8 @@ function init() {
   const rollPositionTwo = 194
   const rollPositionThree =  729
   const rollPositionFour = 754
+  let timer
+  let totalVirus = 100
 
   //MAKE A GRID
   // function, createGrid which takes one parameter, invoked the fucntion below passing in value of current position
@@ -63,9 +67,10 @@ function init() {
     addRoll2(rollPositionTwo)
     addRoll3(rollPositionThree)
     addRoll4(rollPositionFour)
+    // randomVirusMovement(virusCurrentPositionOne)
   }
 
-  //CREATE MAZE - layout is put into an array to crete the shape of the maze. This is then used within the function to create the grid which matches the cell position to the maze position
+  //CREATE MAZE - layout is put into an array to crete the shape of the maze. This is then used within the create grid function to create the grid which matches the cell position to the maze position
   // 1 = black, 2 = edge, 3 = path, 4 = door, 5 = lives
 
   const maze = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
@@ -146,9 +151,9 @@ function init() {
   function removeVirus(position) { 
     cells[position].classList.remove(virusClass)
   }
-  
+
   //MOVE PAC
-  function handleKeyDownForPlayerMovement(event) {
+  function handleKeyUpForPlayerMovement(event) {
     removePac(pacCurrentPosition)
     const horizontalPosition = pacCurrentPosition % width
     const verticalPosition = Math.floor(pacCurrentPosition / width)
@@ -176,9 +181,51 @@ function init() {
     addPac(pacCurrentPosition)
   }
   
+ 
+  
   //VIRUS RANDOMLY GENERATED MOVEMENT
   
+  //virus moves randomly around the grid
+  //function starts with removing virus from current position
+  //if the virus current position is less than cells count move forward one
+  //create a loop so that the virus will move all the way to the last cell on the grid
+  // function randomVirusMovement(virusCurrentPositionOne) {
+  //   for (let i = 0; i < 1000; i ++) {
+  //     removeVirus(virusCurrentPositionOne)
+  //     if (virusCurrentPositionOne[i] < 1000)
+  //     virusCurrentPositionOne++
+  //     else {
+  //       virusCurrentPositionOne
+  //     }
+  //     console.log(virusCurrentPositionOne)
+  //   }
+  //   addVirus1(virusCurrentPositionOne)
+  // }
+    
 
+  function generateRandomVirusIndex() {
+    return Math.floor(Math.random() * 1008)
+  }
+
+  function startGame() {
+    timer = setInterval(() => {
+      if (totalVirus > 1000) {
+        endGame()
+        return
+      }
+      totalVirus++
+      removeVirus(virusCurrentPositionOne)
+      virusCurrentPositionOne = generateRandomVirusIndex()
+      addVirus1(virusCurrentPositionOne)
+    }, 1000)
+    console.log(virusCurrentPositionOne)
+  }
+    
+
+  function endGame() {
+    clearInterval(timer)
+    window.alert('game-over')
+  }
   
 
 
@@ -188,9 +235,10 @@ function init() {
 
 
   // * Event listeners
-  document.addEventListener('keydown', handleKeyDownForPlayerMovement)
+  document.addEventListener('keyup', handleKeyUpForPlayerMovement)
+  start.addEventListener('click', startGame)
 
-
+  
   
   
 
