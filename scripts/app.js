@@ -2,7 +2,8 @@
 
 function init() {
 
-  //VARIABLES 
+  //VARIABLES ------------------------------------------------------------------------------------------
+  
   const grid = document.querySelector('.grid')
 
   const width = 28
@@ -14,8 +15,6 @@ function init() {
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  let pacCurrentPosition = 742 //variable to keep track of current position
-  let virusCurrentPositionOne = 0
   const virusStartingPositionOne = 462
   const virusStartingPositionTwo = 491
   const virusStartingPositionThree = 459
@@ -24,15 +23,20 @@ function init() {
   const rollPositionTwo = 194
   const rollPositionThree =  729
   const rollPositionFour = 754
-  let timer
-  let totalVirus = 100
 
-  //MAKE A GRID
+  let pacCurrentPosition = 742 //variable to keep track of current position
+  let virusCurrentPositionOne = 0 //variable to keep track of virus one
+  let timer //timer for ghost movement for intervals as whack a pika demo
+  let totalVirus = 10 //variable settign current total virus count for virus movement below
+
+  // ! MAKE A GRID -------------------------------------------------------------------------------------
+
   // function, createGrid which takes one parameter, invoked the fucntion below passing in value of current position
   // includes a loop to create the cells relevant to cellCount variable mentioned above
   // tells the function to create a new element for each loop and save to a variable called cell
   // tells the function to append each new element to a class of .grid to its parents of grid
   // pushes each element to its parent (grid)
+
   function createGrid(pacStartingPosition) {
     for (let i = 0; i < maze.length; i++) {
       const cell = document.createElement('div')
@@ -40,6 +44,7 @@ function init() {
       grid.appendChild(cell)
       cells.push(cell)
 
+      //2nd part of the function loops through the array adding the styling for the maze. If statement which checks if the maze array current index === 1 and if condition is true it will add the class 'black' which will style the maze.
       //MAZE
       if (maze[i] === 1) {
         cells[i].classList.add('black')
@@ -57,7 +62,8 @@ function init() {
         cells[i].classList.add('lives')
       }
     }
-    //invoking the addPac function, whicever number is passed into its paratmeters the player will start at. We pass pacStartingPosition which is === pacCurrentPosition as we invoke it in createGrid below
+    // invoking the addPac function, whichever number is passed into its paratmeters the player will start at. We pass pacStartingPosition which is === pacCurrentPosition as we invoke it in createGrid below.
+    // also invoked are all elements that will be on the board which relate to positions mentioned in variables above.
     addPac(pacStartingPosition)
     addVirus1(virusStartingPositionOne)
     addVirus2(virusStartingPositionTwo)
@@ -67,10 +73,9 @@ function init() {
     addRoll2(rollPositionTwo)
     addRoll3(rollPositionThree)
     addRoll4(rollPositionFour)
-    // randomVirusMovement(virusCurrentPositionOne)
   }
 
-  //CREATE MAZE - layout is put into an array to crete the shape of the maze. This is then used within the create grid function to create the grid which matches the cell position to the maze position
+  //CREATE MAZE - maze is put into an array to create its layout. This is then used within the create grid function to create the grid which matches the cell position to the maze position
   // 1 = black, 2 = edge, 3 = path, 4 = door, 5 = lives
 
   const maze = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
@@ -109,12 +114,14 @@ function init() {
                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                 1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                 1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-  
-  //invoking createGrid and passing in value of what currentPosition is. Current position is passed as JavaScript reloads the grid after every turn 
-  createGrid(pacCurrentPosition) 
 
-  //ADD PAC TO GRID
-  //function is saying, the cells at the position mentioned in the variable above, add a class list of pacClass which has been assigned the class for the player in css
+// invoking createGrid and passing in value of what currentPosition is. Current position is passed as JavaScript reloads the grid after every turn. 
+createGrid(pacCurrentPosition) 
+// ? Question - why does createGrid need to be invoked after the maze array if it's global?
+
+// ! -------------------------------------------------------------------------------------------------
+// ? ADD & REMOVE ELEMENTS TO THE GRID ---------------------------------------------------------------
+  //function is saying, the cells at the position mentioned in the variable above, add a class list of (example pacClass) which has been assigned the class for the player in css
   function addPac(position) {
     cells[position].classList.add(pacClass) 
   }
@@ -144,13 +151,18 @@ function init() {
   }
 
   //REMOVE PAC
-  //function is saying whichever position the cell is in, if it's class is pacClass remove this which deletes the player emoji
+  //function is saying whichever position the cell is in, if it's class is pacClass remove this.
   function removePac(position) { 
     cells[position].classList.remove(pacClass)
   }
   function removeVirus(position) { 
     cells[position].classList.remove(virusClass)
   }
+
+//? --------------------------------------------------------------------------------------------------
+//! PLAYER MOVEMENT ----------------------------------------------------------------------------------  
+//? Movement not correct since changing shapre from a square, need to have a think what conditons should be for a rectangle or should movement be based on class?
+//? How does it work with function running? how many times? everytime a keycode conditon is met?
 
   //MOVE PAC
   function handleKeyUpForPlayerMovement(event) {
@@ -181,9 +193,8 @@ function init() {
     addPac(pacCurrentPosition)
   }
   
- 
-  
-  //VIRUS RANDOMLY GENERATED MOVEMENT
+  // ! ------------------------------------------------------------------------------------------------
+  // * VIRUS RANDOMLY GENERATED MOVEMENT --------------------------------------------------------------
   
   //virus moves randomly around the grid
   //function starts with removing virus from current position
@@ -202,14 +213,13 @@ function init() {
   //   addVirus1(virusCurrentPositionOne)
   // }
     
-
   function generateRandomVirusIndex() {
     return Math.floor(Math.random() * 1008)
   }
 
   function startGame() {
     timer = setInterval(() => {
-      if (totalVirus > 1000) {
+      if (totalVirus > 20) {
         endGame()
         return
       }
@@ -217,7 +227,7 @@ function init() {
       removeVirus(virusCurrentPositionOne)
       virusCurrentPositionOne = generateRandomVirusIndex()
       addVirus1(virusCurrentPositionOne)
-    }, 1000)
+    }, 500)
     console.log(virusCurrentPositionOne)
   }
     
@@ -227,18 +237,14 @@ function init() {
     window.alert('game-over')
   }
   
-
-
-
-
-
-
+// * ---------------------------------------------------------------------------------------------------
+// ? EVENT LISTENERS -----------------------------------------------------------------------------------
 
   // * Event listeners
   document.addEventListener('keyup', handleKeyUpForPlayerMovement)
   start.addEventListener('click', startGame)
 
-  
+// ? ---------------------------------------------------------------------------------------------------
   
   
 
