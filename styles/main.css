@@ -54,6 +54,11 @@ header {
 }
 
 .grid div.path {
+  background-color: white;
+  border: 6px solid grey;
+}
+
+.grid div.noDotPath {
   background-color: grey;
 }
 
@@ -69,8 +74,9 @@ header {
   background-color: yellow;
   background-size: contain;
   opacity: 100%;
-  max-width: 20px;
-  max-height: 20px;
+  width: 20px;
+  height: 20px;
+  border: none;
 }
 
 .grid div.virus {

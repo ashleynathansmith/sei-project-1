@@ -172,19 +172,26 @@ createGrid(pacCurrentPosition)
     switch (event.keyCode) {
       //move right takes the horizontal position pac is in which is worked out by using the remainder operator on pacs current position % width (example if the cell is 11, remainder would be 11 as width(12) doesn't fit into 11. By default all numbers on the right of the board will have a remainder of 11) A right move can only be made when horiztonal position is less than width minus 1 (11) as cells on the far right of the board will always be equal to 11 the if statement doesn't run
       case 39: //arrow right
-        if (horizontalPosition < width - 1 && cells[pacCurrentPosition + 1].classList.contains('path')) pacCurrentPosition++
+        if (horizontalPosition < width - 1 && cells[pacCurrentPosition + 1].classList.contains('path') || cells[pacCurrentPosition + 1].classList.contains('noDotPath')) pacCurrentPosition++
+        cells[pacCurrentPosition - 1].setAttribute('class', 'noDotPath')
         break
         //move left takes the horizontal position pac is in which is worked out by using thr remainder operator on pacs current position % width (example if the cell is 0 or 12, the remainder would be 0 for both as there is nothing left after its been divided by 12. This is passed to the value of horizontal position when the left key is pressed. The if statement will only run if the cell number is not divisible by 12 and by default all numbers on the left of the board are)
       case 37: //arrow left
-        if (horizontalPosition > 0 && cells[pacCurrentPosition - 1].classList.contains('path')) pacCurrentPosition--
+        if (horizontalPosition > 0 && cells[pacCurrentPosition - 1].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath')) 
+        pacCurrentPosition--
+        cells[pacCurrentPosition + 1].setAttribute('class', 'noDotPath')
         break
         //move up takes pacs current position and is divided by width (example if the cell number is 1, the vertical position woudld be 0.08 which we use math.floor on to round down to 0). This is passed to the if statement where the condition only runs when the vertical position is greater than 0. By default all the cell positions at the top of the grid will be less than 1 which is rounded down to 0.  
       case 38: //arrow up
-        if (verticalPosition > 0 && cells[pacCurrentPosition - width].classList.contains('path'))pacCurrentPosition -= width
+        if (verticalPosition > 0 && cells[pacCurrentPosition - width].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath'))
+        pacCurrentPosition -= width
+        cells[pacCurrentPosition + width].setAttribute('class', 'noDotPath')
         break
         //move down takes pacs current position and is divided again by width (example if the cell position is 132 this would equal 11). This is again passed to the if statement where the condition to move down is if the vertical position(11) is less than width -1 (11) as the numbers are the same pac won't move down. By default all the numbers on the bottom will be rounded down to 11 so the condition is never met to run the movememt.
       case 40: //arrow down
-        if (verticalPosition < width - 1 && cells[pacCurrentPosition + width].classList.contains('path')) pacCurrentPosition += width
+        if (verticalPosition < width - 1 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath'))
+        pacCurrentPosition += width
+        cells[pacCurrentPosition - width].setAttribute('class', 'noDotPath')
         break
       default:
         console.log('INVALID KEY')
