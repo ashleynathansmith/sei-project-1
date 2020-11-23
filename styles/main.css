@@ -54,12 +54,12 @@ header {
 }
 
 .grid div.path {
-  background-color: white;
-  border: 6px solid grey;
+  background-color: black;
+  border: 6px solid white;
 }
 
 .grid div.noDotPath {
-  background-color: grey;
+  background-color: white;
 }
 
 .grid div.doors {
@@ -71,7 +71,7 @@ header {
 }
 
 .grid div.pac {
-  background-color: yellow;
+  background-image: url(./pac-nan.png);
   background-size: contain;
   opacity: 100%;
   width: 20px;
@@ -80,7 +80,7 @@ header {
 }
 
 .grid div.virus {
-  background-color: greenyellow;
+  background-image: url(./virus.png);
   background-size: contain;
   opacity: 100%;
   max-width: 20px;
@@ -88,7 +88,15 @@ header {
 }
 
 .grid div.roll {
-  background-color: white;
+  background-image: url(./toilet-roll.png);
+  background-size: contain;
+  opacity: 100%;
+  max-width: 20px;
+  max-height: 20px;
+}
+
+grid div.virusHome {
+  background-image: white;
   background-size: contain;
   opacity: 100%;
   max-width: 20px;
