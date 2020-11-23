@@ -38,7 +38,7 @@ function init() {
   // pushes each element to its parent (grid)
 
   function createGrid(pacStartingPosition) {
-    for (let i = 0; i < maze.length; i++) {
+    for (let i = 0; i < layout.length; i++) {
       const cell = document.createElement('div')
       cellCount.textContent = i
       grid.appendChild(cell)
@@ -46,19 +46,19 @@ function init() {
 
       //2nd part of the function loops through the array adding the styling for the maze. If statement which checks if the maze array current index === 1 and if condition is true it will add the class 'black' which will style the maze.
       //MAZE
-      if (maze[i] === 1) {
+      if (layout[i] === 1) {
         cells[i].classList.add('black')
       }
-      if (maze[i] === 2) {
+      if (layout[i] === 2) {
         cells[i].classList.add('edges')
       }
-      if (maze[i] === 3) {
+      if (layout[i] === 3) {
         cells[i].classList.add('path')
       }
-      if (maze[i] === 4) {
+      if (layout[i] === 4) {
         cells[i].classList.add('doors')
       }
-      if (maze[i] === 5) {
+      if (layout[i] === 5) {
         cells[i].classList.add('lives')
       }
     }
@@ -78,7 +78,7 @@ function init() {
   //CREATE MAZE - maze is put into an array to create its layout. This is then used within the create grid function to create the grid which matches the cell position to the maze position
   // 1 = black, 2 = edge, 3 = path, 4 = door, 5 = lives
 
-  const maze = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+  const layout = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -161,8 +161,9 @@ createGrid(pacCurrentPosition)
 
 //? --------------------------------------------------------------------------------------------------
 //! PLAYER MOVEMENT ----------------------------------------------------------------------------------  
-//? Movement not correct since changing shapre from a square, need to have a think what conditons should be for a rectangle or should movement be based on class?
+//? Movement not correct since changing shape from a square, need to have a think what conditons should be for a rectangle or should movement be based on class?
 //? How does it work with function running? how many times? everytime a keycode conditon is met?
+// ? Added dots but still not working correctly when moving player around...
 
   //MOVE PAC
   function handleKeyUpForPlayerMovement(event) {
@@ -173,25 +174,25 @@ createGrid(pacCurrentPosition)
       //move right takes the horizontal position pac is in which is worked out by using the remainder operator on pacs current position % width (example if the cell is 11, remainder would be 11 as width(12) doesn't fit into 11. By default all numbers on the right of the board will have a remainder of 11) A right move can only be made when horiztonal position is less than width minus 1 (11) as cells on the far right of the board will always be equal to 11 the if statement doesn't run
       case 39: //arrow right
         if (horizontalPosition < width - 1 && cells[pacCurrentPosition + 1].classList.contains('path') || cells[pacCurrentPosition + 1].classList.contains('noDotPath')) pacCurrentPosition++
-        cells[pacCurrentPosition - 1].setAttribute('class', 'noDotPath')
+        cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
         //move left takes the horizontal position pac is in which is worked out by using thr remainder operator on pacs current position % width (example if the cell is 0 or 12, the remainder would be 0 for both as there is nothing left after its been divided by 12. This is passed to the value of horizontal position when the left key is pressed. The if statement will only run if the cell number is not divisible by 12 and by default all numbers on the left of the board are)
       case 37: //arrow left
         if (horizontalPosition > 0 && cells[pacCurrentPosition - 1].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath')) 
         pacCurrentPosition--
-        cells[pacCurrentPosition + 1].setAttribute('class', 'noDotPath')
+        cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
         //move up takes pacs current position and is divided by width (example if the cell number is 1, the vertical position woudld be 0.08 which we use math.floor on to round down to 0). This is passed to the if statement where the condition only runs when the vertical position is greater than 0. By default all the cell positions at the top of the grid will be less than 1 which is rounded down to 0.  
       case 38: //arrow up
-        if (verticalPosition > 0 && cells[pacCurrentPosition - width].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath'))
+        if (verticalPosition > 0 && cells[pacCurrentPosition - width].classList.contains('path') || cells[pacCurrentPosition - width].classList.contains('noDotPath'))
         pacCurrentPosition -= width
-        cells[pacCurrentPosition + width].setAttribute('class', 'noDotPath')
+        cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
         //move down takes pacs current position and is divided again by width (example if the cell position is 132 this would equal 11). This is again passed to the if statement where the condition to move down is if the vertical position(11) is less than width -1 (11) as the numbers are the same pac won't move down. By default all the numbers on the bottom will be rounded down to 11 so the condition is never met to run the movememt.
       case 40: //arrow down
-        if (verticalPosition < width - 1 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath'))
+        if (verticalPosition < width - 1 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition + width].classList.contains('noDotPath'))
         pacCurrentPosition += width
-        cells[pacCurrentPosition - width].setAttribute('class', 'noDotPath')
+        cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
       default:
         console.log('INVALID KEY')
