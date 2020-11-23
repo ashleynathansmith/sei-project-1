@@ -34,7 +34,7 @@ header {
   width: 560px;
   height: 720px;
   background-color: white;
-  opacity: 70%;
+  opacity: 75%;
 }
 
 .grid div {
@@ -56,6 +56,7 @@ header {
 .grid div.path {
   background-color: black;
   border: 6px solid white;
+  border-radius: 50%;
 }
 
 .grid div.noDotPath {
@@ -67,16 +68,20 @@ header {
   opacity: 100%;
 }
 .grid div.lives {
-  background-color: yellow;
+  background-image: url(./pac-nan.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+
 }
 
 .grid div.pac {
   background-image: url(./pac-nan.png);
   background-size: contain;
-  opacity: 100%;
   width: 20px;
   height: 20px;
   border: none;
+  opacity: 100%;
 }
 
 .grid div.virus {
@@ -90,9 +95,9 @@ header {
 .grid div.roll {
   background-image: url(./toilet-roll.png);
   background-size: contain;
-  opacity: 100%;
   max-width: 20px;
   max-height: 20px;
+  opacity: 100%;
 }
 
 grid div.virusHome {
