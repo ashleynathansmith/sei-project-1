@@ -15,19 +15,16 @@ function init() {
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  const virusStartingPositionOne = 462
-  const virusStartingPositionTwo = 491
-  const virusStartingPositionThree = 459
-  const virusStartingPositionFour = 518
+  const virusStartingPositionOne = 113
   const rollPositionOne = 169
   const rollPositionTwo = 194
   const rollPositionThree = 729
   const rollPositionFour = 754
+  let totalVirus = 1
 
   let pacCurrentPosition = 742 //variable to keep track of current position
-  let virusCurrentPositionOne = 462 //variable to keep track of virus one
+  let virusCurrentPositionOne = virusStartingPositionOne//variable to keep track of virus one
   let timer //timer for ghost movement for intervals as whack a pika demo
-  let totalVirus = 1 //variable settign current total virus count for virus movement below
 
   // ! MAKE A GRID -------------------------------------------------------------------------------------
 
@@ -72,9 +69,6 @@ function init() {
     // also invoked are all elements that will be on the board which relate to positions mentioned in variables above.
     addPac(pacStartingPosition)
     addVirus1(virusStartingPositionOne)
-    addVirus2(virusStartingPositionTwo)
-    addVirus3(virusStartingPositionThree)
-    addVirus4(virusStartingPositionFour)
     addRoll1(rollPositionOne)
     addRoll2(rollPositionTwo)
     addRoll3(rollPositionThree)
@@ -85,41 +79,41 @@ function init() {
   // 1 = black, 2 = edge, 3 = path, 4 = door, 5 = lives
 
   const layout = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 6, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 6, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2,
-                  2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 4, 4, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
-                  3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
-                  2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
-                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
-                  2, 6, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 6, 2,
-                  2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
-                  2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
-                  2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2,
-                  2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
-                  2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
-                  2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
-                  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                  1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                  1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 6, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 6, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2,
+    2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 4, 4, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+    2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 1, 1, 1, 1, 1,
+    2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2,
+    2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+    2, 6, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 6, 2,
+    2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
+    2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2,
+    2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 2,
+    2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
+    2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2,
+    2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
   // invoking createGrid and passing in value of what currentPosition is. Current position is passed as JavaScript reloads the grid after every turn. 
   createGrid(pacCurrentPosition)
@@ -134,15 +128,15 @@ function init() {
   function addVirus1(position) {
     cells[position].classList.add(virusClass)
   }
-  function addVirus2(position) {
-    cells[position].classList.add(virusClass)
-  }
-  function addVirus3(position) {
-    cells[position].classList.add(virusClass)
-  }
-  function addVirus4(position) {
-    cells[position].classList.add(virusClass)
-  }
+  // function addVirus2(position) {
+  //   cells[position].classList.add(virusClass)
+  // }
+  // function addVirus3(position) {
+  //   cells[position].classList.add(virusClass)
+  // }
+  // function addVirus4(position) {
+  //   cells[position].classList.add(virusClass)
+  // }
   function addRoll1(position) {
     cells[position].classList.add(rollClass)
   }
@@ -195,7 +189,7 @@ function init() {
         break
       //move down takes pacs current position and is divided again by width (example if the cell position is 132 this would equal 11). This is again passed to the if statement where the condition to move down is if the vertical position(11) is less than width -1 (11) as the numbers are the same pac won't move down. By default all the numbers on the bottom will be rounded down to 11 so the condition is never met to run the movememt.
       case 40: //arrow down
-        if (verticalPosition < width + 7 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition + width].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll'))
+        if (verticalPosition < width + 4 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition + width].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll'))
           pacCurrentPosition += width
         cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
@@ -212,25 +206,24 @@ function init() {
   // create an array for all possible moves the computer can make
   // select a move at random & assign to array
   // check if the next cell of the grid in that direction is a valid move
-  // if valid move computer and change class to virus or if the move cointains a wall select another random move
+  // if valid move computer and change class to virus or if the move contains a wall select another random move
   // ? function looping but not moving the virus multiple times, is this an issue in the function or startGame?
-  function randomVirusMovement(virusCurrentPositionOne) {
-    removeVirus(virusCurrentPositionOne)
-    const moves = [1, +height, -1, -height]
+  function randomVirusMovement(virusStartingPositionOne) {
+    const moves = [+1, +width, -1, -width]
     let move = moves[Math.floor(Math.random() * moves.length)]
-    
-    //change to not edge
-    if (cells[virusCurrentPositionOne + move].classList.contains('path') || cells[virusCurrentPositionOne + move].classList.contains('noDotPath') || cells[virusCurrentPositionOne + move].classList.contains('roll') || cells[virusCurrentPositionOne + move].classList.contains('doors') || cells[virusCurrentPositionOne + move].classList.contains('black')) {
+    console.log(move)
+    if (!cells[virusCurrentPositionOne + move].classList.contains('edges') && !cells[virusCurrentPositionOne + move].classList.contains('virus')) {
+      removeVirus(virusCurrentPositionOne)
       virusCurrentPositionOne += move
-      cells[virusCurrentPositionOne += move].setAttribute('class', 'virus')
-      console.log(virusCurrentPositionOne)
+      cells[virusCurrentPositionOne].classList.add('virus')
+    } else if (!cells[virusCurrentPositionOne + move].classList.contains('edges') && cells[virusCurrentPositionOne + move].classList.contains('roll')) {
+      removeVirus(virusCurrentPositionOne)
+      virusCurrentPositionOne += move
+      cells[virusCurrentPositionOne].classList.add('virus')
     } else if (cells[virusCurrentPositionOne + move].classList.contains('edges')) {
       move = moves[Math.floor(Math.random() * moves.length)]
-      console.log
     }
   }
-
-  // randomVirusMovement(virusCurrentPositionOne)
 
   function startGame() {
     timer = setInterval(() => {
@@ -238,16 +231,17 @@ function init() {
         endGame()
         return
       }
-      totalVirus++
-      console.log(totalVirus)
       randomVirusMovement(virusCurrentPositionOne)
+      console.log(virusCurrentPositionOne)
     }, 500)
   }
-  // DEMO-----------------------------------------------------------------------------------------------------------
+
   function endGame() {
     clearInterval(timer)
     window.alert('game-over')
   }
+
+  // // DEMO-----------------------------------------------------------------------------------------------------------
 
   // function startGame() {
   //   timer = setInterval(() => {
