@@ -5,6 +5,7 @@ function init() {
   //VARIABLES ------------------------------------------------------------------------------------------
 
   const grid = document.querySelector('.grid')
+  const totalScore = document.querySelector('.score')
 
   const width = 28
   const height = 36
@@ -15,15 +16,23 @@ function init() {
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  const virusStartingPositionOne = 113
+  // const virusStartingPositionTwo = 138
+  // const virusStartingPositionThree = 897
+  // const virusStartingPositionFour = 922
+  const virusStartingPositionOne = 120
   const rollPositionOne = 169
   const rollPositionTwo = 194
   const rollPositionThree = 729
   const rollPositionFour = 754
   let totalVirus = 1
+  let score = 0
 
   let pacCurrentPosition = 742 //variable to keep track of current position
-  let virusCurrentPositionOne = virusStartingPositionOne//variable to keep track of virus one
+  let virusCurrentPositionOne = 120
+   //variable to keep track of virus one
+  // const virusCurrentPositionTwo = virusStartingPositionTwo
+  // const virusCurrentPositionThree = virusStartingPositionThree
+  // const virusCurrentPositionFour = virusStartingPositionFour
   let timer //timer for ghost movement for intervals as whack a pika demo
 
   // ! MAKE A GRID -------------------------------------------------------------------------------------
@@ -44,7 +53,7 @@ function init() {
       //2nd part of the function loops through the array adding the styling for the maze. If statement which checks if the maze array current index === 1 and if condition is true it will add the class 'black' which will style the maze.
       //MAZE
       if (layout[i] === 0) {
-        cells[i].classList.add('virushome')
+        cells[i].classList.add('virusHome')
       }
       if (layout[i] === 1) {
         cells[i].classList.add('black')
@@ -69,10 +78,13 @@ function init() {
     // also invoked are all elements that will be on the board which relate to positions mentioned in variables above.
     addPac(pacStartingPosition)
     addVirus1(virusStartingPositionOne)
-    addRoll1(rollPositionOne)
-    addRoll2(rollPositionTwo)
-    addRoll3(rollPositionThree)
-    addRoll4(rollPositionFour)
+    // addVirus1(virusStartingPositionTwo)
+    // addVirus1(virusStartingPositionThree)
+    // addVirus1(virusStartingPositionFour)
+    // addRoll1(rollPositionOne)
+    // addRoll2(rollPositionTwo)
+    // addRoll3(rollPositionThree)
+    // addRoll4(rollPositionFour)
   }
 
   //CREATE MAZE - maze is put into an array to create its layout. This is then used within the create grid function to create the grid which matches the cell position to the maze position
@@ -208,7 +220,7 @@ function init() {
   // check if the next cell of the grid in that direction is a valid move
   // if valid move computer and change class to virus or if the move contains a wall select another random move
   // ? function looping but not moving the virus multiple times, is this an issue in the function or startGame?
-  function randomVirusMovement(virusStartingPositionOne) {
+  function randomVirusMovement(virusCurrentPositionOne) {
     const moves = [+1, +width, -1, -width]
     let move = moves[Math.floor(Math.random() * moves.length)]
     console.log(move)
@@ -216,23 +228,38 @@ function init() {
       removeVirus(virusCurrentPositionOne)
       virusCurrentPositionOne += move
       cells[virusCurrentPositionOne].classList.add('virus')
-    } else if (!cells[virusCurrentPositionOne + move].classList.contains('edges') && cells[virusCurrentPositionOne + move].classList.contains('roll')) {
-      removeVirus(virusCurrentPositionOne)
-      virusCurrentPositionOne += move
-      cells[virusCurrentPositionOne].classList.add('virus')
-    } else if (cells[virusCurrentPositionOne + move].classList.contains('edges')) {
+    } else {
       move = moves[Math.floor(Math.random() * moves.length)]
     }
   }
 
+//SCORE
+  function addScore() {
+    if (cells[pacCurrentPosition].classList.contains('path')) {
+      score += 1000
+      totalScore.innerHTML = score
+      cells[pacCurrentPosition].classList.remove('path')
+      cells[pacCurrentPosition].classList.add('noDotPath')
+    }
+  }
+  
+
   function startGame() {
     timer = setInterval(() => {
-      if (totalVirus > 50) {
+      if (totalVirus > 5) {
+        totalVirus++
         endGame()
         return
       }
       randomVirusMovement(virusCurrentPositionOne)
+      totalVirus++
       console.log(virusCurrentPositionOne)
+      // randomVirusMovement(virusCurrentPositionTwo)
+      // console.log(virusCurrentPositionTwo)
+      // randomVirusMovement(virusCurrentPositionThree)
+      // console.log(virusCurrentPositionThree)
+      // randomVirusMovement(virusCurrentPositionFour)
+      // console.log(virusCurrentPositionFour)
     }, 500)
   }
 
@@ -240,28 +267,6 @@ function init() {
     clearInterval(timer)
     window.alert('game-over')
   }
-
-  // // DEMO-----------------------------------------------------------------------------------------------------------
-
-  // function startGame() {
-  //   timer = setInterval(() => {
-  //     if (totalVirus > 50) {
-  //       endGame()
-  //       return
-  //     }
-  //     totalVirus++
-  //     removeVirus(virusCurrentPositionOne)
-  //     virusCurrentPositionOne += 1
-  //     addVirus1(virusCurrentPositionOne)
-  //   }, 200)
-  //   console.log(virusCurrentPositionOne)
-  // }
-
-  // function endGame() {
-  //   clearInterval(timer)
-  //   window.alert('game-over')
-  // }
-
 
   // * ---------------------------------------------------------------------------------------------------
   // ? EVENT LISTENERS -----------------------------------------------------------------------------------
