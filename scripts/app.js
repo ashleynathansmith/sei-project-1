@@ -16,23 +16,13 @@ function init() {
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  // const virusStartingPositionTwo = 138
-  // const virusStartingPositionThree = 897
-  // const virusStartingPositionFour = 922
-  const virusStartingPositionOne = 120
-  const rollPositionOne = 169
-  const rollPositionTwo = 194
-  const rollPositionThree = 729
-  const rollPositionFour = 754
+  const virusStartingPositionOne = 120 //fine
   let totalVirus = 1
   let score = 0
 
   let pacCurrentPosition = 742 //variable to keep track of current position
+  const pacStartingPosition = pacCurrentPosition
   let virusCurrentPositionOne = 120
-   //variable to keep track of virus one
-  // const virusCurrentPositionTwo = virusStartingPositionTwo
-  // const virusCurrentPositionThree = virusStartingPositionThree
-  // const virusCurrentPositionFour = virusStartingPositionFour
   let timer //timer for ghost movement for intervals as whack a pika demo
 
   // ! MAKE A GRID -------------------------------------------------------------------------------------
@@ -77,14 +67,7 @@ function init() {
     // invoking the addPac function, whichever number is passed into its paratmeters the player will start at. We pass pacStartingPosition which is === pacCurrentPosition as we invoke it in createGrid below.
     // also invoked are all elements that will be on the board which relate to positions mentioned in variables above.
     addPac(pacStartingPosition)
-    addVirus1(virusStartingPositionOne)
-    // addVirus1(virusStartingPositionTwo)
-    // addVirus1(virusStartingPositionThree)
-    // addVirus1(virusStartingPositionFour)
-    // addRoll1(rollPositionOne)
-    // addRoll2(rollPositionTwo)
-    // addRoll3(rollPositionThree)
-    // addRoll4(rollPositionFour)
+    addVirus(virusStartingPositionOne)
   }
 
   //CREATE MAZE - maze is put into an array to create its layout. This is then used within the create grid function to create the grid which matches the cell position to the maze position
@@ -137,31 +120,10 @@ function init() {
   function addPac(position) {
     cells[position].classList.add(pacClass)
   }
-  function addVirus1(position) {
+  function addVirus(position) {
     cells[position].classList.add(virusClass)
   }
-  // function addVirus2(position) {
-  //   cells[position].classList.add(virusClass)
-  // }
-  // function addVirus3(position) {
-  //   cells[position].classList.add(virusClass)
-  // }
-  // function addVirus4(position) {
-  //   cells[position].classList.add(virusClass)
-  // }
-  function addRoll1(position) {
-    cells[position].classList.add(rollClass)
-  }
-  function addRoll2(position) {
-    cells[position].classList.add(rollClass)
-  }
-  function addRoll3(position) {
-    cells[position].classList.add(rollClass)
-  }
-  function addRoll4(position) {
-    cells[position].classList.add(rollClass)
-  }
-
+  
   //REMOVE PAC
   //function is saying whichever position the cell is in, if it's class is pacClass remove this.
   function removePac(position) {
@@ -184,24 +146,24 @@ function init() {
     switch (event.keyCode) {
       //move right takes the horizontal position pac is in which is worked out by using the remainder operator on pacs current position % width (example if the cell is 11, remainder would be 11 as width(12) doesn't fit into 11. By default all numbers on the right of the board will have a remainder of 11) A right move can only be made when horiztonal position is less than width minus 1 (11) as cells on the far right of the board will always be equal to 11 the if statement doesn't run
       case 39: //arrow right
-        if (horizontalPosition < width - 1 && cells[pacCurrentPosition + 1].classList.contains('path') || cells[pacCurrentPosition + 1].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll')) pacCurrentPosition++
+        if (horizontalPosition < width - 1 && !cells[pacCurrentPosition + 1].classList.contains('edges')) pacCurrentPosition++
         cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
       //move left takes the horizontal position pac is in which is worked out by using thr remainder operator on pacs current position % width (example if the cell is 0 or 12, the remainder would be 0 for both as there is nothing left after its been divided by 12. This is passed to the value of horizontal position when the left key is pressed. The if statement will only run if the cell number is not divisible by 12 and by default all numbers on the left of the board are)
       case 37: //arrow left
-        if (horizontalPosition > 0 && cells[pacCurrentPosition - 1].classList.contains('path') || cells[pacCurrentPosition - 1].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll'))
+        if (horizontalPosition > 0 && !cells[pacCurrentPosition - 1].classList.contains('edges'))
           pacCurrentPosition--
         cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
       //move up takes pacs current position and is divided by width (example if the cell number is 1, the vertical position woudld be 0.08 which we use math.floor on to round down to 0). This is passed to the if statement where the condition only runs when the vertical position is greater than 0. By default all the cell positions at the top of the grid will be less than 1 which is rounded down to 0.  
       case 38: //arrow up
-        if (verticalPosition > 0 && cells[pacCurrentPosition - width].classList.contains('path') || cells[pacCurrentPosition - width].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll'))
+        if (verticalPosition > 0 && !cells[pacCurrentPosition - width].classList.contains('edges'))
           pacCurrentPosition -= width
         cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
       //move down takes pacs current position and is divided again by width (example if the cell position is 132 this would equal 11). This is again passed to the if statement where the condition to move down is if the vertical position(11) is less than width -1 (11) as the numbers are the same pac won't move down. By default all the numbers on the bottom will be rounded down to 11 so the condition is never met to run the movememt.
       case 40: //arrow down
-        if (verticalPosition < width + 4 && cells[pacCurrentPosition + width].classList.contains('path') || cells[pacCurrentPosition + width].classList.contains('noDotPath') || cells[pacCurrentPosition - width].classList.contains('roll'))
+        if (verticalPosition < width + 4 && !cells[pacCurrentPosition + width].classList.contains('edges'))
           pacCurrentPosition += width
         cells[pacCurrentPosition].setAttribute('class', 'noDotPath')
         break
@@ -210,11 +172,13 @@ function init() {
     }
 
     addPac(pacCurrentPosition)
+    addScore()
+    console.log(score)
+    console.log([pacCurrentPosition])
   }
 
   // ! ------------------------------------------------------------------------------------------------
   // * VIRUS RANDOMLY GENERATED MOVEMENT --------------------------------------------------------------
-
   // create an array for all possible moves the computer can make
   // select a move at random & assign to array
   // check if the next cell of the grid in that direction is a valid move
@@ -224,7 +188,8 @@ function init() {
     const moves = [+1, +width, -1, -width]
     let move = moves[Math.floor(Math.random() * moves.length)]
     console.log(move)
-    if (!cells[virusCurrentPositionOne + move].classList.contains('edges') && !cells[virusCurrentPositionOne + move].classList.contains('virus')) {
+    console.log(virusCurrentPositionOne)
+    if (!cells[virusCurrentPositionOne + move].classList.contains('edges')) {
       removeVirus(virusCurrentPositionOne)
       virusCurrentPositionOne += move
       cells[virusCurrentPositionOne].classList.add('virus')
@@ -236,12 +201,12 @@ function init() {
 //SCORE
   function addScore() {
     if (cells[pacCurrentPosition].classList.contains('path')) {
-      score += 1000
+      score += 10
       totalScore.innerHTML = score
-      cells[pacCurrentPosition].classList.remove('path')
-      cells[pacCurrentPosition].classList.add('noDotPath')
     }
   }
+
+
   
 
   function startGame() {
