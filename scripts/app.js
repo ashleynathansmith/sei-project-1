@@ -121,17 +121,10 @@ function init() {
   function addPac(position) {
     cells[position].classList.add(pacClass)
   }
-  function addVirus(position) {
-    cells[position].classList.add(virusClass)
-  }
-  
   //REMOVE PAC
   //function is saying whichever position the cell is in, if it's class is pacClass remove this.
   function removePac(position) {
     cells[position].classList.remove(pacClass)
-  }
-  function removeVirus(position) {
-    cells[position].classList.remove(virusClass)
   }
 
   //? --------------------------------------------------------------------------------------------------
@@ -167,19 +160,31 @@ function init() {
 
     addPac(pacCurrentPosition)
     addScore()
+    
   }
 
   // ! ------------------------------------------------------------------------------------------------
+
+    function rollEaten() {
+      if (cells[pacCurrentPosition].classList.contains('roll')) {
+        if (cells[pacCurrentPosition].classList.contains('roll')) {
+          score += 100
+          totalScore.innerHTML = score
+          cells[pacCurrentPosition].classList.remove('roll')
+      }
+    }
+  }
+
   // * VIRUS RANDOMLY GENERATED MOVEMENT --------------------------------------------------------------
 
   //New movement for virus put into a Class. Generic virus class created for properties needed
 class Virus {
-  constructor(className, startIndex, speed) {
+  constructor(className, startPosition, speed) {
     this.className = className
-    this.startIndex = startIndex
+    this.startPosition = startPosition
     this.speed = speed
-    this.currentIndex = startIndex
-    this.timerId = 100
+    this.currentPosition = startPosition
+    this.timerId = 500
   }
 }
 
@@ -193,7 +198,7 @@ viruses = [
 
 //code to add viruses to the board which states for each virus go through each one and add their current index a class of virus which is set in css to contain the virus image
 viruses.forEach(virus => {
-  cells[virus.currentIndex].classList.add('virus')
+  cells[virus.currentPosition].classList.add('virus')
 })
 
 //code which moves all viruses seperatly using logic below. Again runs through each virus using for each loop and invokes the moveVirus function
@@ -205,20 +210,22 @@ viruses.forEach(virus => moveVirus(virus))
   // if valid move computer and change class to virus or if the move contains a wall select another random move
 
 function moveVirus(virus) {
+  
   const directions = [-1, +1, +width, -width]
   let direction = directions[Math.floor(Math.random() * directions.length)]
 
 virus.timerId = setInterval(function() {
-  if  (!cells[virus.currentIndex + direction].classList.contains('virus') &&
-        !cells[virus.currentIndex + direction].classList.contains('edges') ) {
+  if  (!cells[virus.currentPosition + direction].classList.contains('virus') &&
+        !cells[virus.currentPosition + direction].classList.contains('edges') ) {
           //remove the ghosts classes
-          cells[virus.currentIndex].classList.remove(virus.className)
-          cells[virus.currentIndex].classList.remove('virus')
+          cells[virus.currentPosition].classList.remove(virus.className)
+          cells[virus.currentPosition].classList.remove('virus')
           //move into that space
-          virus.currentIndex += direction
-          cells[virus.currentIndex].classList.add(virus.className, 'virus')
+          virus.currentPosition += direction
+          cells[virus.currentPosition].classList.add(virus.className, 'virus')
       //else find a new random direction ot go in
       } else direction = directions[Math.floor(Math.random() * directions.length)]
+      endGame()
 }, virus.speed)
 }
 
@@ -244,28 +251,13 @@ virus.timerId = setInterval(function() {
       totalScore.innerHTML = score
       cells[pacCurrentPosition].classList.remove('path')
     }
-    if (cells[pacCurrentPosition].classList.contains('roll')) {
-      score += 100
-      totalScore.innerHTML = score
-      cells[pacCurrentPosition].classList.remove('roll')
     }
-  }
-
-
-  
-
-  function startGame() {
-    timer = setInterval(() => {
-      if (score > 50) {
-        endGame()
-        return
-      }
-    }, 500)
-  }
 
   function endGame() {
-    clearInterval(timer)
-    window.alert('game-over')
+    if (cells[pacCurrentPosition].className.contains('pac') && cells[this.virus.currentPosition].className.contains('virus')) {
+      clearInterval(timer)
+      window.alert('game-over')
+    }
   }
 
   // * ---------------------------------------------------------------------------------------------------
