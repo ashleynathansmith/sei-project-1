@@ -16,13 +16,13 @@ function init() {
   const pacClass = 'pac'
   const rollClass = 'roll'
   const virusClass = 'virus'
-  const virusStartingPositionOne = 120 //fine
+  // const virusStartingPositionOne = 120 //fine
   let totalVirus = 1
   let score = 0
 
   let pacCurrentPosition = 742 //variable to keep track of current position
   const pacStartingPosition = pacCurrentPosition
-  let virusCurrentPositionOne = 120
+  // let virusCurrentPositionOne = 120
   let timer //timer for ghost movement for intervals as whack a pika demo
 
   // ! MAKE A GRID -------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ function init() {
     // invoking the addPac function, whichever number is passed into its paratmeters the player will start at. We pass pacStartingPosition which is === pacCurrentPosition as we invoke it in createGrid below.
     // also invoked are all elements that will be on the board which relate to positions mentioned in variables above.
     addPac(pacStartingPosition)
-    addVirus(virusStartingPositionOne)
+    // addVirus(virusStartingPositionOne)
     
   }
 
@@ -171,24 +171,71 @@ function init() {
 
   // ! ------------------------------------------------------------------------------------------------
   // * VIRUS RANDOMLY GENERATED MOVEMENT --------------------------------------------------------------
-  // create an array for all possible moves the computer can make
+
+  //New movement for virus put into a Class. Generic virus class created for properties needed
+class Virus {
+  constructor(className, startIndex, speed) {
+    this.className = className
+    this.startIndex = startIndex
+    this.speed = speed
+    this.currentIndex = startIndex
+    this.timerId = 100
+  }
+}
+
+//4 viruses created for the game
+viruses = [
+  new Virus('virus', 113, 250),
+  new Virus('virus', 138, 250),
+  new Virus('virus', 897, 250),
+  new Virus('virus', 922, 250)
+]
+
+//code to add viruses to the board which states for each virus go through each one and add their current index a class of virus which is set in css to contain the virus image
+viruses.forEach(virus => {
+  cells[virus.currentIndex].classList.add('virus')
+})
+
+//code which moves all viruses seperatly using logic below. Again runs through each virus using for each loop and invokes the moveVirus function
+viruses.forEach(virus => moveVirus(virus))
+
+ // create an array for all possible moves the computer can make
   // select a move at random & assign to array
   // check if the next cell of the grid in that direction is a valid move
   // if valid move computer and change class to virus or if the move contains a wall select another random move
-  // ? function looping but not moving the virus multiple times, is this an issue in the function or startGame?
-  function randomVirusMovement(virusCurrentPositionOne) {
-    const moves = [+1, +width, -1, -width]
-    let move = moves[Math.floor(Math.random() * moves.length)]
-    console.log(move)
-    console.log(virusCurrentPositionOne)
-    if (!cells[virusCurrentPositionOne + move].classList.contains('edges')) {
-      removeVirus(virusCurrentPositionOne)
-      virusCurrentPositionOne += move
-      cells[virusCurrentPositionOne].classList.add('virus')
-    } else {
-      move = moves[Math.floor(Math.random() * moves.length)]
-    }
-  }
+
+function moveVirus(virus) {
+  const directions = [-1, +1, +width, -width]
+  let direction = directions[Math.floor(Math.random() * directions.length)]
+
+virus.timerId = setInterval(function() {
+  if  (!cells[virus.currentIndex + direction].classList.contains('virus') &&
+        !cells[virus.currentIndex + direction].classList.contains('edges') ) {
+          //remove the ghosts classes
+          cells[virus.currentIndex].classList.remove(virus.className)
+          cells[virus.currentIndex].classList.remove('virus')
+          //move into that space
+          virus.currentIndex += direction
+          cells[virus.currentIndex].classList.add(virus.className, 'virus')
+      //else find a new random direction ot go in
+      } else direction = directions[Math.floor(Math.random() * directions.length)]
+}, virus.speed)
+}
+
+//OLD CODE FOR VIRUS MOVEMENT SET TO ONE SPECIFC VIRUS
+  // function randomVirusMovement(virusCurrentPositionOne) {
+  //   const moves = [+1, +width, -1, -width]
+  //   let move = moves[Math.floor(Math.random() * moves.length)]
+  //   console.log(move)
+  //   console.log(virusCurrentPositionOne)
+  //   if (!cells[virusCurrentPositionOne + move].classList.contains('edges')) {
+  //     removeVirus(virusCurrentPositionOne)
+  //     virusCurrentPositionOne += move
+  //     cells[virusCurrentPositionOne].classList.add('virus')
+  //   } else {
+  //     move = moves[Math.floor(Math.random() * moves.length)]
+  //   }
+  // }
 
 //SCORE
   function addScore() {
@@ -209,13 +256,10 @@ function init() {
 
   function startGame() {
     timer = setInterval(() => {
-      if (totalVirus > 5) {
-        totalVirus++
+      if (score > 50) {
         endGame()
         return
       }
-      randomVirusMovement(virusCurrentPositionOne)
-      totalVirus++
     }, 500)
   }
 
