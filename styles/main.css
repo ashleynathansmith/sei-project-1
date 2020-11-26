@@ -109,4 +109,60 @@ grid div.virusHome {
   max-height: 20px;
 }
 
+.grid div.scared-virus {
+  background-image: url(./scared-virus.jpg);
+  background-size: contain;
+  opacity: 100%;
+  max-width: 20px;
+  max-height: 20px;
+  border: none;
+}
+
+.grid div.virus-eaten {
+  display: none;
+  background-size: contain;
+  opacity: 100%;
+  max-width: 20px;
+  max-height: 20px;
+  border: none;
+}
+
+.score-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  color: blue;
+  font-family: Helvetica;
+  margin: 20px;
+}
+
+button {
+  border: none;
+  background-color: white;
+  color: blue;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+button:hover {
+  border: 1px blue solid;
+  border-radius: 5%;
+  background-color: blue;
+  color: white;
+  font-size: 2em;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+span {
+  font-family: Helvetica;
+}
+
+
+
+
 
