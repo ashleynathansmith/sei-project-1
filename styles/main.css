@@ -4,6 +4,7 @@
 
 .page-wrapper {
   height: 100vh;
+  background-color: black;
 }
 
 body {
@@ -68,11 +69,9 @@ header {
   opacity: 100%;
 }
 .grid div.lives {
-  background-image: url(./pac-nan.png);
+  background-color: yellow;
   background-size: contain;
   background-repeat: no-repeat;
-  border-radius: 50%;
-
 }
 
 .grid div.pac {
@@ -131,27 +130,40 @@ grid div.virusHome {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: black;
 }
 
 h1 {
-  color: blue;
+  color: black;
   font-family: Helvetica;
   margin: 20px;
+  text-shadow: 2px 2px rgb(248, 208, 31);
+}
+
+h2 {
+  font-family: Helvetica;
+  position: relative;
+  z-index: 1;
+  margin-top: -65px;
+  margin-left: 400px;
+  text-shadow: 2px 2px rgb(248, 208, 31);
+  transform: rotate(-5deg)
 }
 
 button {
   border: none;
-  background-color: white;
-  color: blue;
+  background-color: black;
+  color: black;
   font-size: 2em;
   font-weight: bold;
+  text-shadow: 2px 2px rgb(248, 208, 31);
 }
 
 button:hover {
-  border: 1px blue solid;
+  border: 1px black solid;
   border-radius: 5%;
-  background-color: blue;
-  color: white;
+  background-color: white;
+  color: black;
   font-size: 2em;
   font-weight: bold;
   cursor: pointer;

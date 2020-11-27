@@ -288,7 +288,7 @@ virus.timerId = setInterval(function() {
   // ? EVENT LISTENERS -----------------------------------------------------------------------------------
 
   // * Event listeners
-  document.addEventListener('keydown', handleKeyUpForPlayerMovement)
+  document.addEventListener('keyup', handleKeyUpForPlayerMovement)
   start.addEventListener('click', playAudio)
   document.addEventListener('keyup', playAudio)
 
